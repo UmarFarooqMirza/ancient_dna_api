@@ -35,8 +35,6 @@ This FastAPI application allows users to analyze ancient DNA sequences by upload
 
 # 📂 Project Structure
 bash
-Copy
-Edit
 ancient_dna_api/
 ├── main.py                # Main FastAPI app
 ├── storage.py             # Sample storage handler
@@ -45,6 +43,7 @@ ancient_dna_api/
 ├── .env                   # Environment variables (e.g., API key)
 ├── requirements.txt       # Python dependencies
 └── README.md              # Project documentation
+
 📝 CSV Format
 Your uploaded CSV file must contain the following columns:
 
