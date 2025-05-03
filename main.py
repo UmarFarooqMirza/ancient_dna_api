@@ -20,7 +20,7 @@ if not api_key:
 
 try:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-pro-latest')  # <-- Correct model name
+    model = genai.GenerativeModel('gemini-1.5-pro-latest')
     print("Gemini model initialized successfully")
 except Exception as e:
     print(f"Gemini model initialization failed: {str(e)}")
@@ -40,7 +40,7 @@ async def upload_csv(file: UploadFile = File(...)):
     try:
         storage.clear()
         content = await file.read()
-        decoded = content.decode('utf-8-sig')  # Handle BOM
+        decoded = content.decode('utf-8-sig')
         reader = csv.DictReader(StringIO(decoded))
         
         for row in reader:
@@ -67,7 +67,6 @@ def generate_sequence(request: SequenceRequest):
         raise HTTPException(status_code=404, detail="Sample ID not found")
 
     try:
-        # Generate the sequence
         dna_sequence = generate_dna_sequence(
             id=sample['numeric_id'],
             region=sample['region'],
@@ -75,13 +74,13 @@ def generate_sequence(request: SequenceRequest):
             dna_seed=sample['seed']
         )
         
-        # Get the dominant motif (first 4 characters)
+
         dominant_motif = dna_sequence[:4] if len(dna_sequence) >= 4 else dna_sequence
         
         return {
             "sample_id": request.id,
-            "dna_sequence_beginning": dna_sequence[:100],  # First 100 chars
-            "dna_sequence_end": dna_sequence[-100:],       # Last 100 chars
+            "dna_sequence_beginning": dna_sequence[:100],
+            "dna_sequence_end": dna_sequence[-100:],
             "length": len(dna_sequence),
             "dominant_motif": dominant_motif,
             "truncated": len(dna_sequence) > 200
@@ -92,7 +91,6 @@ def generate_sequence(request: SequenceRequest):
 @app.post("/compare-sequences/")
 def compare_sequences(request: CompareRequest):
     def calculate_similarity(seq1: str, seq2: str) -> float:
-        # Basic similarity calculation using k-mers
         k = 4
         kmers1 = {seq1[i:i+k] for i in range(len(seq1)-k+1)}
         kmers2 = {seq2[i:i+k] for i in range(len(seq2)-k+1)}
@@ -132,7 +130,6 @@ def compare_sequences(request: CompareRequest):
 @app.get("/ask-me-anything/")
 async def ask_me_anything(question: str):
     """Hybrid endpoint with automatic fallback"""
-    # Local knowledge base as fallback
     local_answers = {
         "what is this server used for": "Analyzing ancient alien DNA sequences",
         "how does this api work": "Upload CSV → Generate Sequences → Compare Samples",
@@ -140,19 +137,19 @@ async def ask_me_anything(question: str):
         "default": "I can answer questions about DNA sequence analysis"
     }
 
-    # Check if model exists
+
     if model:
         try:
-            # If model is initialized, try to get the answer from Gemini API
+            
             response = model.generate_content(
                 f"Answer briefly as a DNA API assistant: {question}"
             )
             return {"answer": response.text, "source": "gemini"}
         except Exception as e:
-            # If Gemini API fails, print the error and fallback
+            
             print(f"Gemini API failed: {str(e)}")
     
-    # Fallback to local answers if model is not available or API call fails
+    
     clean_q = question.lower().strip(' ?')
     return {
         "answer": local_answers.get(clean_q, local_answers["default"]),
