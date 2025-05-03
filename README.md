@@ -80,7 +80,7 @@ Clone the repository:
 bash
 Copy
 Edit
-git clone https://github.com/yourusername/ancient_dna_api.git
+git clone https://github.com/UmarFarooqMirza/ancient_dna_api.git
 cd ancient_dna_api
 
 
@@ -153,10 +153,6 @@ View details of a single sample.
 
 # 🧠 Dependencies
 Add these to requirements.txt:
-
-txt
-Copy
-Edit
 fastapi
 uvicorn
 python-dotenv
