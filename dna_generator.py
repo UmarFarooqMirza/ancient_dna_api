@@ -15,8 +15,7 @@ def generate_dna_sequence(id: int, region: str, age: int, dna_seed: str) -> str:
         or raises ValueError for invalid inputs
     """
     random.seed(f"{id}+{region}+{age}")
-    
-    # Region-specific motifs
+
     MOTIFS = {
         "apac": ["agtc", "agct", "actg", "atgc"],
         "na": ["gtac", "gcat", "gcta"],
@@ -38,7 +37,7 @@ def generate_dna_sequence(id: int, region: str, age: int, dna_seed: str) -> str:
     @lru_cache(maxsize=100)
     def _expensive_computation():
         x = 1
-        for _ in range(100_000):  # Simulate expensive computation
+        for _ in range(100_000):
             x = (x * 987654321) % 123456789
         return x
     
